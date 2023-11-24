@@ -54,7 +54,7 @@ BACKGROUND_IMAGE = pygame.transform.scale(pygame.image.load("sprites/background.
 
 # Sets the player's speeds.
 # 1 is added, so that if the rest is 0, then the player will still get some speed.
-PLAYER_SPEED_SLOW = 45//((COLUMNS * ROWS) ** 0.5) + 1
+PLAYER_SPEED_SLOW = 42//((COLUMNS * ROWS) ** 0.5) + 1
 PLAYER_SPEED_NORMAL = 56//((COLUMNS * ROWS) ** 0.5) + 1
 PLAYER_SPEED_FAST = 70//((COLUMNS * ROWS) ** 0.5) + 1
 
@@ -73,7 +73,7 @@ POWERUP_SLOW_IMAGE = pygame.transform.scale(pygame.image.load("sprites/powerup/p
 # Sets up constants for the enemies.
 
 # Sets the speeds for the enemies.
-ENEMY_SPEED_SLOW = 34//((COLUMNS * ROWS) ** 0.5) + 1
+ENEMY_SPEED_SLOW = 32//((COLUMNS * ROWS) ** 0.5) + 1
 ENEMY_SPEED_NORMAL = 42//((COLUMNS * ROWS) ** 0.5) + 1
 ENEMY_SPEED_FAST = 53//((COLUMNS * ROWS) ** 0.5) + 1
 
@@ -362,9 +362,9 @@ class Enemy(SPRITE):
                     WIDTH_times_row = -VERTICAL_OFFSET + VERTICAL_CELL_WIDTH*row
                     WIDTH_times_column = -HORIZONTAL_OFFSET + HORIZONTAL_CELL_WIDTH*column
 
-                    # Explanation: The chances of an enemy being type 1 is 71.875% and so on.
+                    # Explanation: The chances of an enemy being type 1 is 75% and so on.
                     selected_enemy_type = choices([1, 2], [75, 25], k=1)[0]
-                    # Explanation: The chances of an enemy having a powerup of type 1 is 23.4375% and so on.
+                    # Explanation: The chances of an enemy having a powerup of type 1 is 25% and so on.
                     selected_enemy_powerup_type = choices([1, 2, 3], [25, 15, 60], k=1)[0]
 
                     enemy = Enemy(
