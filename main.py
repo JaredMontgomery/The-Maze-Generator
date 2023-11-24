@@ -35,8 +35,9 @@ CLOCK = pygame.time.Clock()
 
 # Sets up constants for the maze.
 
-COLUMNS, ROWS = 24, 24
+COLUMNS, ROWS = 12, 12
 
+# This ensures that, no matter what COLUMNS or ROWS are equal to, each cell will be square-shaped.
 if COLUMNS > ROWS:
     HORIZONTAL_CELL_WIDTH = SCREEN_WIDTH / COLUMNS
     VERTICAL_CELL_HEIGHT = HORIZONTAL_CELL_WIDTH
@@ -278,7 +279,9 @@ class PowerUp(SPRITE):
 
         powerup_group = pygame.sprite.Group()
 
+        # Places each row of powerups.
         for row in range(1, ROWS + 1):
+            # Places each column of powerups.
             for column in range(1, COLUMNS + 1):
                 if randint(1, powerup_chance) == 1:
                     # Calculates where the powerup should be placed.
@@ -360,7 +363,9 @@ class Enemy(SPRITE):
 
         enemy_group = pygame.sprite.Group()
 
+        # Places each row of enemies. 
         for row in range(1, ROWS + 1):
+            # Places each column of enemies. 
             for column in range(1, COLUMNS + 1):
                 if randint(1, enemy_chance) == 1:
                     # Calculates where the enemy should be placed.
@@ -428,8 +433,7 @@ class Enemy(SPRITE):
             # Once a power-up has been "collected", the enemy shouldn't be able to get
             # it again.
             powerups.remove(collided_sprite)
-                    
-    
+                     
     def update(self):
         """Mainly used to move each enemy and have it act.
         Also checks for maze wall collision detection.
@@ -518,7 +522,7 @@ class MazeWall(SPRITE):
         super().__init__()
 
         self.image = pygame.Surface((width, height))
-        self.image.fill("white")
+        self.image.fill("#ffffff")
         self.rect = self.image.get_rect(**kwargs)
     
     @staticmethod
@@ -544,9 +548,11 @@ class MazeWall(SPRITE):
             else:
                 direction_end = 4
 
+        # Places each row of maze walls.
         for row in range(1, ROWS):
             # Calculates where the player should be placed vertically (what row).
             WIDTH_times_row = VERTICAL_CELL_HEIGHT * row
+            # Places each column of maze walls.
             for column in range(1, COLUMNS):
                 # Calculates where the player should be placed horizontally (what column).
                 WIDTH_times_column = HORIZONTAL_CELL_WIDTH * column
