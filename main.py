@@ -18,8 +18,6 @@ pygame.init()
 SPRITE = pygame.sprite.Sprite
 SPRITECOLLIDEANY = pygame.sprite.spritecollideany
 
-print(pygame.display.get_desktop_sizes())
-
 # Sets up constants for the window and other stuff.
 
 # Gets the size of the desktop view.
@@ -37,15 +35,22 @@ CLOCK = pygame.time.Clock()
 
 # Sets up constants for the maze.
 
-COLUMNS, ROWS = 12, 12
+COLUMNS, ROWS = 24, 24
 
-HORIZONTAL_CELL_WIDTH = SCREEN_WIDTH / COLUMNS
-VERTICAL_CELL_WIDTH = SCREEN_HEIGHT / ROWS
+if COLUMNS > ROWS:
+    HORIZONTAL_CELL_WIDTH = SCREEN_WIDTH / COLUMNS
+    VERTICAL_CELL_HEIGHT = HORIZONTAL_CELL_WIDTH
+else:
+    VERTICAL_CELL_HEIGHT = SCREEN_HEIGHT / ROWS
+    HORIZONTAL_CELL_WIDTH = VERTICAL_CELL_HEIGHT
 
-AVERAGE_CELL_WIDTH = (HORIZONTAL_CELL_WIDTH * VERTICAL_CELL_WIDTH) ** 0.5
+MAZE_WIDTH = COLUMNS * HORIZONTAL_CELL_WIDTH
+MAZE_HEIGHT = ROWS * VERTICAL_CELL_HEIGHT
+
+AVERAGE_CELL_WIDTH = (HORIZONTAL_CELL_WIDTH * VERTICAL_CELL_HEIGHT) ** 0.5
 
 HORIZONTAL_OFFSET = HORIZONTAL_CELL_WIDTH / 2  # Used to properly position things horizontally in a cell.
-VERTICAL_OFFSET = VERTICAL_CELL_WIDTH / 2  # Used to properly position things vertically in a cell.
+VERTICAL_OFFSET = VERTICAL_CELL_HEIGHT / 2  # Used to properly position things vertically in a cell.
 
 # Sets the background for all mazes.
 BACKGROUND_IMAGE = pygame.transform.scale(pygame.image.load("sprites/background.png"), (SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -277,7 +282,7 @@ class PowerUp(SPRITE):
             for column in range(1, COLUMNS + 1):
                 if randint(1, powerup_chance) == 1:
                     # Calculates where the powerup should be placed.
-                    WIDTH_times_row = -VERTICAL_OFFSET + VERTICAL_CELL_WIDTH*row
+                    WIDTH_times_row = -VERTICAL_OFFSET + VERTICAL_CELL_HEIGHT*row
                     WIDTH_times_column = -HORIZONTAL_OFFSET + HORIZONTAL_CELL_WIDTH*column
 
                     # Bad powerups are slightly more common.
@@ -294,7 +299,7 @@ class PowerUp(SPRITE):
         
         # These 2 lines are here so that even if no powerups generate,
         # the end still can generate properly.
-        WIDTH_times_row = -VERTICAL_OFFSET + VERTICAL_CELL_WIDTH*row
+        WIDTH_times_row = -VERTICAL_OFFSET + VERTICAL_CELL_HEIGHT*row
         WIDTH_times_column = -HORIZONTAL_OFFSET + HORIZONTAL_CELL_WIDTH*column
         
         # Add an end point for the maze, so the player can go on to the next maze / level.
@@ -338,11 +343,11 @@ class Enemy(SPRITE):
                     self.speed = ENEMY_SPEED_FAST
                 # Powered-down / slow type 2 enemy.
                 case 2:
-                    self.image = ENEMY_STATE_TYPE_1_SLOW_IMAGE
+                    self.image = ENEMY_STATE_TYPE_2_SLOW_IMAGE
                     self.speed = ENEMY_SPEED_SLOW
                 # Normal type 2 enemy.
                 case 3:
-                    self.image = ENEMY_STATE_TYPE_1_NORMAL_IMAGE
+                    self.image = ENEMY_STATE_TYPE_2_NORMAL_IMAGE
                     self.speed = ENEMY_SPEED_NORMAL
         
         self.rect = self.image.get_rect(**kwargs)
@@ -359,7 +364,7 @@ class Enemy(SPRITE):
             for column in range(1, COLUMNS + 1):
                 if randint(1, enemy_chance) == 1:
                     # Calculates where the enemy should be placed.
-                    WIDTH_times_row = -VERTICAL_OFFSET + VERTICAL_CELL_WIDTH*row
+                    WIDTH_times_row = -VERTICAL_OFFSET + VERTICAL_CELL_HEIGHT*row
                     WIDTH_times_column = -HORIZONTAL_OFFSET + HORIZONTAL_CELL_WIDTH*column
 
                     # Explanation: The chances of an enemy being type 1 is 75% and so on.
@@ -541,7 +546,7 @@ class MazeWall(SPRITE):
 
         for row in range(1, ROWS):
             # Calculates where the player should be placed vertically (what row).
-            WIDTH_times_row = VERTICAL_CELL_WIDTH * row
+            WIDTH_times_row = VERTICAL_CELL_HEIGHT * row
             for column in range(1, COLUMNS):
                 # Calculates where the player should be placed horizontally (what column).
                 WIDTH_times_column = HORIZONTAL_CELL_WIDTH * column
@@ -561,7 +566,7 @@ class MazeWall(SPRITE):
                         # Create a wall facing up.
                         maze_wall = MazeWall(
                             width=1,
-                            height=VERTICAL_CELL_WIDTH,
+                            height=VERTICAL_CELL_HEIGHT,
                             x=WIDTH_times_column,
                             bottom=WIDTH_times_row
                         )
@@ -577,7 +582,7 @@ class MazeWall(SPRITE):
                         # Create a wall facing down.
                         maze_wall = MazeWall(
                             width=1,
-                            height=VERTICAL_CELL_WIDTH,
+                            height=VERTICAL_CELL_HEIGHT,
                             x=WIDTH_times_column,
                             y=WIDTH_times_row
                         )
@@ -595,8 +600,8 @@ class MazeWall(SPRITE):
         # Add a boundary to the maze, so that the player can't escape it.
         maze_wall_group.add(
             MazeWall(SCREEN_WIDTH, 1, x=0, y=0),  # Top wall.
-            MazeWall(1, SCREEN_HEIGHT, x=SCREEN_WIDTH - 1, y=0),  # Right wall. Shifted 1 (pixel) to the left, so you can see it.
-            MazeWall(SCREEN_WIDTH, 1, x=0, y=SCREEN_HEIGHT - 1),  # Bottom wall. Shifted 1 to up, so you can see it.
+            MazeWall(1, SCREEN_HEIGHT, x=MAZE_WIDTH - 1, y=0),  # Right wall. Shifted 1 (pixel) to the left, so you can see it.
+            MazeWall(SCREEN_WIDTH, 1, x=0, y=MAZE_HEIGHT - 1),  # Bottom wall. Shifted 1 to up, so you can see it.
             MazeWall(1, SCREEN_HEIGHT, x=0, y=0)  # Left wall.
         )
 
