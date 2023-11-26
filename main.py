@@ -636,8 +636,8 @@ def draw_stuff() -> None:
 # The game loop.
 while True:
     # Sets up the chances of stuff appearing in the maze.
-    powerup_chance = abs(round((COLUMNS*ROWS - 15)/(COLUMNS*ROWS / 75) * uniform(uniform(0, 1.1289), 1.1289)))
-    enemy_chance = abs(round((COLUMNS*ROWS - 15)/(COLUMNS*ROWS / 140.625) * uniform(uniform(0, 1.1289), 1.1289)))
+    powerup_chance = abs(round((COLUMNS*ROWS - 15)/(COLUMNS*ROWS / 61.5234375) * uniform(uniform(0, 1.1289), 1.1289)))
+    enemy_chance = abs(round((COLUMNS*ROWS - 15)/(COLUMNS*ROWS / 123.046875) * uniform(uniform(0, 1.1289), 1.1289)))
 
     # Every now and then, there will either be a really good maze (lots of powerups)
     # or a really challenging maze (lots of enemies).
